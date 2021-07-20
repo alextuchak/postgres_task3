@@ -1,24 +1,32 @@
 CREATE TABLE IF NOT EXISTS Genre (Id SERIAL PRIMARY KEY,
 Name VARCHAR(64) UNIQUE);
 
+CREATE TABLE IF NOT EXISTS Artists (Id SERIAL PRIMARY KEY, 
+Name VARCHAR(64));
+
+CREATE TABLE IF NOT EXISTS GenreArtists (GenreId integer references Genre(id),
+AtristsId integer references Artists(id),
+constraint ga primary key (GenreId, AtristsId));
+
+CREATE TABLE IF NOT EXISTS Albums (Id SERIAL PRIMARY KEY, 
+Name VARCHAR(64) NOT NULL);
+									
+CREATE TABLE IF NOT EXISTS ArtistsAlbums (ArtistsId integer references Artists(id),
+AlbumsId integer references Albums(id),
+constraint aa primary key (ArtistsId, AlbumsId));	
+									
+CREATE TABLE IF NOT EXISTS Tracks (Id SERIAL PRIMARY KEY,
+Name VARCHAR(64) NOT NULL,
+Length INTEGER NOT NULL);
+									
+CREATE TABLE IF NOT EXISTS AlbumsTracks (AlbumsId integer references Albums(id) UNIQUE,
+TracksId integer references Tracks(id),
+constraint at primary key (AlbumsId, TracksId));
+									
 CREATE TABLE IF NOT EXISTS MixTapes (Id SERIAL PRIMARY KEY,
 Name VARCHAR(64) UNIQUE,
 Released INTEGER NOT NULL);
 
-CREATE TABLE IF NOT EXISTS Albums (Id SERIAL PRIMARY KEY, 
-Name VARCHAR(64) UNIQUE,
-Released INTEGER NOT NULL,
-AlbumGenre INTEGER REFERENCES Genre(id) NOT NULL);
-
-CREATE TABLE IF NOT EXISTS Artists (Id SERIAL PRIMARY KEY, 
-Name VARCHAR(64),
-ArtistGenre INTEGER REFERENCES Genre(id) NOT NULL,
-ArtistAlbum INTEGER REFERENCES Albums(id) NOT NULL);
-
-CREATE TABLE IF NOT EXISTS Tracks (Id SERIAL,
-Name VARCHAR(64),
-Length INTEGER NOT NULL,
-TrackArtist INTEGER REFERENCES Artists(id) NOT NULL,
-TrackAlbum INTEGER REFERENCES Albums(id) NOT NULL,
-TrackMixtapes INTEGER REFERENCES MixTapes(id) NULL);
-	
+CREATE TABLE IF NOT EXISTS TracksMixtapes (TracksId integer references Tracks(id),
+MixtapesId integer references Mixtapes(id),
+constraint tm primary key (TracksId, MixtapesId));
